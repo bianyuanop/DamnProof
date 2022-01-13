@@ -4,18 +4,17 @@
       "main": "src/proof/main.mo",
       "type": "motoko"
     },
-    "proof_assets": {
-      "dependencies": [
-        "proof"
-      ],
-      "frontend": {
-        "entrypoint": "src/proof_assets/src/index.html"
-      },
-      "source": [
-        "src/proof_assets/assets",
-        "dist/proof_assets/"
-      ],
-      "type": "assets"
+    "accounts": {
+      "main": "src/accounts/main.mo",
+      "type": "motoko"
+    },
+    "passages": {
+      "main": "src/passages/main.mo",
+      "type": "motoko"
+    },
+    "comments": {
+      "main": "src/comments/main.mo",
+      "type": "motoko"
     }
   },
   "defaults": {
