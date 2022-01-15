@@ -51,6 +51,7 @@ actor Passages {
 
     var count: Nat = 0;
     var passages = RBTree.RBTree<Text, Passage>(Text.compare);
+    var defaultBatchSize: Nat = 10;
 
     private func nat8Arr2Text(arr: [Nat8]): async Text {
         var res: Text = "";
@@ -64,10 +65,11 @@ actor Passages {
     // may encounter time efficient problem
     // need to change actor data structure to ease
     // public query func filter(keywords: [Text]): async List.List<Text> {
-    public query func filter(keywords: [Text]): async [Text] {
+    private func filter(keywords: [Text]): List.List<Text> {
+        var keywordsSize = Iter.size<Text>(Array.vals<Text>(keywords));
+
         func isIn(_tag: Text): Bool {
             var keywordsIter = Iter.fromArray(keywords);
-            // if(Iter.size(keywordsIter) == 0) return true;
             for(k in keywordsIter) {
                 if(k == _tag) return true;
             };
@@ -78,10 +80,9 @@ actor Passages {
         var passageIter: Iter.Iter<(Text, Passage)> = passages.entries();
         var res: List.List<Text> = List.nil<Text>();
         for(pIter in passageIter) {
-            if(List.some(pIter.1.tags, isIn)) res := List.push<Text>(pIter.0, res);
+            if(keywordsSize == 0 or List.some(pIter.1.tags, isIn)) res := List.push<Text>(pIter.0, res);
         };
-        //res
-        List.toArray<Text>(res)
+        res
     };
 
     public shared({caller}) func put(_URI: Text, tags: [Text]): async [Text] {
@@ -117,4 +118,18 @@ actor Passages {
         [true]
     };
 
+    public query func batchFilter(keywords: [Text], batch: Nat): async [Text] {
+        
+        var filterd: List.List<Text> = filter(keywords);
+        var chunked: List.List<List.List<Text>> = List.chunks<Text>(defaultBatchSize, filterd);
+        var size: Nat = List.size<List.List<Text>>(chunked);
+
+        var resOp = List.get<List.List<Text>>(chunked, batch);
+        var res = switch resOp {
+            case (?l) l;
+            case null List.nil<Text>();
+        };
+
+        List.toArray(res)
+    }
 };
