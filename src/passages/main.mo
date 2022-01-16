@@ -53,6 +53,7 @@ actor Passages {
     var passages = RBTree.RBTree<Text, Passage>(Text.compare);
     var defaultBatchSize: Nat = 10;
 
+    // unused yet
     private func nat8Arr2Text(arr: [Nat8]): async Text {
         var res: Text = "";
         var toIter: Iter.Iter<Nat8> = Array.vals(arr);
@@ -131,5 +132,12 @@ actor Passages {
         };
 
         List.toArray(res)
-    }
+    };
+
+    public query func exists(passageId: Text): async [Bool] {
+        switch (passages.get(passageId)) {
+            case (?p) [true];
+            case null [false];
+        }
+    };
 };
