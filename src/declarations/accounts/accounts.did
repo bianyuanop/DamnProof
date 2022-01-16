@@ -1,0 +1,6 @@
+service : {
+  getCount: () -> (nat) query;
+  register: () -> (vec bool);
+  updateProfileURI: (text) -> (vec bool);
+  verify: (principal) -> (vec bool) query;
+}

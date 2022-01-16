@@ -1,0 +1,6 @@
+service : {
+  batchFilter: (vec text, nat) -> (vec text) query;
+  exists: (text) -> (vec bool) query;
+  put: (text, vec text) -> (vec text);
+  remove: (text) -> (vec bool);
+}

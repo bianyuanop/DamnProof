@@ -1,0 +1,17 @@
+type PackedComment = 
+ record {
+   nat;
+   Comment;
+ };
+type Comment = 
+ record {
+   nat;
+   principal;
+   text;
+ };
+service : {
+  comment: (text, text) -> (vec bool);
+  delete: (text, nat) -> (vec bool);
+  getComments: (text, nat) -> (vec PackedComment) query;
+  reply: (text, nat, text) -> (vec bool);
+}
